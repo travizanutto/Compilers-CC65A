@@ -1,3 +1,4 @@
-build/*
+build
 !build/CMakeLists.txt
-bin/*
+bin
+tests

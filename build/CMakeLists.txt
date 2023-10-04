@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.11)
 
 project(nag_to_jacomo)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin )
@@ -10,10 +10,10 @@ find_package(FLEX)
 find_package(BISON)
 
 set(LEXER_OUT "${PARSER_DIR}/lex.c")
-set(PARSER_OUT "${PARSER_DIR}/parse.c")
+set(PARSER_OUT "${PARSER_DIR}/parse.tab.c")
 
 flex_target(LEXER "${SRC_DIR}/lex.l" "${LEXER_OUT}" DEFINES_FILE "${PARSER_DIR}/lex.h")
-bison_target(PARSER "${SRC_DIR}/parse.y" "${PARSER_OUT}" DEFINES_FILE "${PARSER_DIR}/parse.h")
+bison_target(PARSER "${SRC_DIR}/parse.y" "${PARSER_OUT}" DEFINES_FILE "${PARSER_DIR}/parse.tab.h")
 add_flex_bison_dependency(LEXER PARSER)
 
 add_executable(nag_to_jacomo "${LEXER_OUT}" "${PARSER_OUT}")

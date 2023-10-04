@@ -1,8 +1,8 @@
-.PHONY: all clean
+.SILENT: clean
 
 all: src/lex.l src/parse.y
-	cd build/ ; cmake . ; make
-	cd ..
+	@cd build/ ; cmake . ; make -s
+	@cd ..
 
 clean:
 	rm -rf bin/*
