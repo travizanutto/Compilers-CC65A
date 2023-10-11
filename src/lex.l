@@ -15,12 +15,12 @@ NOT         "NAO"
 
 %%
 
-{NAME}      { return NAME; }
 {BELIEFS}   { return BELIEFS; }
 {GOALS}     { return GOALS; }
 {PLANS}     { return PLANS; }
 {AND}       { return AND; }
 {OR}        { return OR; }
 {NOT}       { return NOT; }
+{NAME}      { printf("name: %s\n", yytext); return NAME; }
 
 %%

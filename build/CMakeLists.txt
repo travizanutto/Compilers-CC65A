@@ -13,7 +13,7 @@ set(LEXER_OUT "${PARSER_DIR}/lex.c")
 set(PARSER_OUT "${PARSER_DIR}/parse.tab.c")
 
 flex_target(LEXER "${SRC_DIR}/lex.l" "${LEXER_OUT}" DEFINES_FILE "${PARSER_DIR}/lex.h")
-bison_target(PARSER "${SRC_DIR}/parse.y" "${PARSER_OUT}" DEFINES_FILE "${PARSER_DIR}/parse.tab.h")
+bison_target(PARSER "${SRC_DIR}/parse.y" "${PARSER_OUT}" DEFINES_FILE "${PARSER_DIR}/parse.tab.h" COMPILE_FLAGS --graph)
 add_flex_bison_dependency(LEXER PARSER)
 
 add_executable(nag_to_jacomo "${LEXER_OUT}" "${PARSER_OUT}")
