@@ -7,42 +7,45 @@
 %}
 
 %union {
-    const char* s;
+    char s[256];
 }
 
 %token <s> NAME 
-%token BELIEFS GOALS PLANS AND OR NOT
+%token <s> BELIEFS GOALS PLANS AND OR NOT
+%token PERCENT NUMBER_SIGN OPEN_CURLY_BRACKET CLOSE_CURLY_BRACKET OPEN_PARENTHESIS CLOSE_PARENTHESIS SEMICOLON
+
 %start program
 
 %%
-program: agent_list { }
+program: 
+    | agent_list program
     ;
 
 agent_list: 
-    | agent '%' agent_list
+    | agent PERCENT agent_list { }
     ;
 
-agent: '#' agent_name BELIEFS '{' simple_list '}' GOALS '{' simple_list '}' PLANS '{' plan_set '}'
+agent: NUMBER_SIGN agent_name BELIEFS OPEN_CURLY_BRACKET simple_list CLOSE_CURLY_BRACKET GOALS OPEN_CURLY_BRACKET simple_list CLOSE_CURLY_BRACKET PLANS OPEN_CURLY_BRACKET plan_set CLOSE_CURLY_BRACKET
     ;
 
 agent_name: NAME
     ;
 
 simple_list:
-    | list_element_name ';' simple_list
+    | list_element_name SEMICOLON simple_list
     ;
 
 list_element_name: NAME
     ;
 
 plan_set: 
-    | plan_name plan_tuple ';' plan_set
+    | plan_name plan_tuple SEMICOLON plan_set
     ;
 
 plan_name: NAME
     ;
 
-plan_tuple: '(' plan_trigger ';' context ';' '{' simple_list '}' ')'
+plan_tuple: OPEN_PARENTHESIS plan_trigger CLOSE_PARENTHESIS context SEMICOLON OPEN_CURLY_BRACKET simple_list CLOSE_CURLY_BRACKET CLOSE_PARENTHESIS
     ;
 
 plan_trigger: NAME
@@ -70,8 +73,7 @@ context_name: NAME
 // ---------------------------------
 
 int main() {
-    //yyin = fopen("/home/cainan/Compilers-CC65A/tests/bob.nag", "r");
-    printf("%i\n", yyparse());
+    yyparse();
 }
 
 int yyerror(const char* s, ...) {}
