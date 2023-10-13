@@ -7,6 +7,7 @@
 NUMBER      [0-9]
 LETTER      [a-zA-Z]
 NAME        {LETTER}({LETTER}|{NUMBER})?*
+AGENT_NAME  "#"{NAME}
 BELIEFS     "crencas: "
 GOALS       "objetivos: "
 PLANS       "planos: "
@@ -16,12 +17,12 @@ NOT         "NAO"
 
 %%
 "%"         { return PERCENT; }
-"#"         { return NUMBER_SIGN; }
 "{"         { return OPEN_CURLY_BRACKET; }
 "}"         { return CLOSE_CURLY_BRACKET; }
 "("         { return OPEN_PARENTHESIS; }
 ")"         { return CLOSE_PARENTHESIS; }
 ";"         { return SEMICOLON; }
+\n          { return NEW_LINE; }
 {BELIEFS}   { return BELIEFS; }
 {GOALS}     { return GOALS; }
 {PLANS}     { return PLANS; }
@@ -29,5 +30,6 @@ NOT         "NAO"
 {OR}        { return OR; }
 {NOT}       { return NOT; }
 {NAME}      { sscanf(yytext, "%s", yylval.s); return NAME; }
+{AGENT_NAME} { sscanf(yytext, "%s", yylval.s); return AGENT_NAME; }
 
 %%
