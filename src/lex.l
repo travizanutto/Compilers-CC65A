@@ -22,7 +22,7 @@ NOT         "NAO"
 "("             { return OPEN_PARENTHESIS; }
 ")"             { return CLOSE_PARENTHESIS; }
 ";"             { return SEMICOLON; }
-\n              { return NEW_LINE; }
+
 {BELIEFS}       { return BELIEFS; }
 {GOALS}         { return GOALS; }
 {PLANS}         { return PLANS; }

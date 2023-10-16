@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
 
-project(nag_to_jacomo)
+project(cc54a)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin )
 
 set(SRC_DIR "../src")
@@ -16,5 +16,5 @@ flex_target(LEXER "${SRC_DIR}/lex.l" "${LEXER_OUT}" DEFINES_FILE "${PARSER_DIR}/
 bison_target(PARSER "${SRC_DIR}/parse.y" "${PARSER_OUT}" DEFINES_FILE "${PARSER_DIR}/parse.tab.h" COMPILE_FLAGS --graph)
 add_flex_bison_dependency(LEXER PARSER)
 
-add_executable(nag_to_jacomo "${LEXER_OUT}" "${PARSER_OUT}")
-target_include_directories(nag_to_jacomo PRIVATE "${PARSER_DIR}")
+add_executable(cc54a "${LEXER_OUT}" "${PARSER_OUT}")
+target_include_directories(cc54a PRIVATE "${PARSER_DIR}")
