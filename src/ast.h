@@ -119,8 +119,18 @@ agent* new_agent(char name[256], leaf *beliefs, leaf *goals, plan *plans, agent 
     return tmp;
 }
 
-void eval(agent *agent);
+void eval(agent *agent) {
+    auto jacamo_file = fopen("out/main.jcm", "w");
+    fprintf(jacamo_file, "mas cc54a {");
+
+    fprintf(jacamo_file, "\n}");
+}
 
 int main(int argc, char **argv) {
+    yyin = fopen("/home/cainan/Compilers-CC65A/src/bob.nag", "r");
     yyparse();
+}
+
+int yyerror(char const*, ...) {
+    return 0;
 }

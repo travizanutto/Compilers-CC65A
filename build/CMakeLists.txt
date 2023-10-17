@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.11)
 
 project(cc54a)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin )
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin)
 
 set(SRC_DIR "../src")
 set(PARSER_DIR "${CMAKE_CURRENT_BINARY_DIR}")
@@ -9,8 +9,8 @@ set(PARSER_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 find_package(FLEX)
 find_package(BISON)
 
-set(LEXER_OUT "${PARSER_DIR}/lex.c")
-set(PARSER_OUT "${PARSER_DIR}/parse.tab.c")
+set(LEXER_OUT "${PARSER_DIR}/lex.cpp")
+set(PARSER_OUT "${PARSER_DIR}/parse.tab.cpp")
 
 flex_target(LEXER "${SRC_DIR}/lex.l" "${LEXER_OUT}" DEFINES_FILE "${PARSER_DIR}/lex.h")
 bison_target(PARSER "${SRC_DIR}/parse.y" "${PARSER_OUT}" DEFINES_FILE "${PARSER_DIR}/parse.tab.h" COMPILE_FLAGS -Wcounterexamples)

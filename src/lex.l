@@ -1,7 +1,6 @@
 %option noyywrap
 %{
     #include "../build/parse.tab.h"
-    #define NAME_MAX_VALUE 256
 %}
 
 NUMBER      [0-9]
@@ -31,5 +30,5 @@ NOT         "NAO"
 {NOT}           { return NOT; }
 {NAME}          { sscanf(yytext, "%s", yylval.s); return NAME; }
 {AGENT_NAME}    { sscanf(yytext, "%s", yylval.s); return AGENT_NAME; }
-
+[ \t\r\n]       
 %%
