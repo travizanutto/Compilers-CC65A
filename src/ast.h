@@ -8,6 +8,7 @@ extern int yylineno;
 extern FILE* yyin;
 int yyerror(const char* s, ...);
 int yylex();
+int yyparse();
 #ifdef YYDEBUG
     yydebug = 1;
 #endif
@@ -119,3 +120,7 @@ agent* new_agent(char name[256], leaf *beliefs, leaf *goals, plan *plans, agent 
 }
 
 void eval(agent *agent);
+
+int main(int argc, char **argv) {
+    yyparse();
+}
