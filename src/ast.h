@@ -13,13 +13,10 @@ int yylex();
 #endif
 
 typedef enum {
-    _SIMPLE,
     _AND,
     _OR,
     _NOT,
-    _AND_NOT,
-    _OR_NOT,
-} context_type;
+} CONTEXT_TYPE ;
 
 typedef struct leaf {
     char leaf_name[256];
@@ -27,9 +24,9 @@ typedef struct leaf {
 } leaf;
 
 typedef struct context {
-    char context_name[256];
-    context_type type;
-    struct context *next;
+    char first[256];
+    char second[256];
+    CONTEXT_TYPE type;
 } context;
 
 typedef struct plan {
@@ -79,16 +76,17 @@ leaf* new_leaf(char name[256], leaf* next) {
     return tmp;
 }
 
-
-context* new_context(char name[256], context_type type, context *next) {
+context* new_context(char first[256], char second[256], CONTEXT_TYPE type) {
     context *tmp = (context*) malloc(sizeof(context));
     if (!tmp) {
-        printf("Couldn't allocate context %s at %i.\n", name, yylineno);
+        printf("Couldn't allocate context at %i.\n", yylineno);
         exit(EXIT_FAILURE);
     }
-    strlcpy(tmp->context_name, name, 255);
+    strlcpy(tmp->first, first, 255);
+    if (second) {
+        strlcpy(tmp->second, second, 255);
+    }
     tmp->type = type;
-    tmp->next = next;
     return tmp;
 }
 
