@@ -23,13 +23,13 @@
 %start program
 
 %%
-program: agent_list { eval($1); }
+program: agent_list { eval($1); free_ast($1); }
 
 agent_list: { $$ = NULL; }
     | agent_name beliefs goals plans PERCENT agent_list { $$ = new_agent($1, $2, $3, $4, $6); }
     ;
 
-agent_name: AGENT_NAME { strlcpy($$, yyval.s, 255); }
+agent_name: AGENT_NAME { strlcpy($$, yyval.s, NAME_SIZE_NULL); }
     ;
 
 beliefs: BELIEFS OPEN_CURLY_BRACKET simple_list CLOSE_CURLY_BRACKET { $$ = $3; }
@@ -42,7 +42,7 @@ simple_list: { $$ = NULL; }
     | list_element_name SEMICOLON simple_list { $$ = new_leaf(yyval.s, $3); }
     ;
 
-list_element_name: NAME { strlcpy($$, yyval.s, 255); }
+list_element_name: NAME { strlcpy($$, yyval.s, NAME_SIZE_NULL); }
     ;
 
 plans: PLANS OPEN_CURLY_BRACKET plan_set CLOSE_CURLY_BRACKET { $$ = $3; }
@@ -52,10 +52,10 @@ plan_set: { $$ = NULL; }
     | plan_name OPEN_PARENTHESIS trigger context actions CLOSE_PARENTHESIS SEMICOLON plan_set { $$ = new_plan($1, $3, $4, $5, $8); }
     ;
 
-plan_name: NAME { strlcpy($$, yyval.s, 255); }
+plan_name: NAME { strlcpy($$, yyval.s, NAME_SIZE_NULL); }
     ;
 
-trigger: NAME SEMICOLON { strlcpy($$, yyval.s, 255); }
+trigger: NAME SEMICOLON { strlcpy($$, yyval.s, NAME_SIZE_NULL); }
     ;
 
 context: NAME AND NAME SEMICOLON { $$ = new_context($1, $3, _AND); }

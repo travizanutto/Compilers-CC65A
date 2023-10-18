@@ -29,6 +29,6 @@ NOT         "NAO"
 {OR}            { return OR; }
 {NOT}           { return NOT; }
 {NAME}          { sscanf(yytext, "%s", yylval.s); return NAME; }
-{AGENT_NAME}    { sscanf(yytext, "%s", yylval.s); return AGENT_NAME; }
+{AGENT_NAME}    { sscanf(yytext + 1, "%s", yylval.s); return AGENT_NAME; }
 [ \t\r\n]       
 %%

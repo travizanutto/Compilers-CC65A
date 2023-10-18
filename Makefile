@@ -6,6 +6,7 @@ all: src/lex.l src/parse.y
 
 clean:
 	rm -rf bin/*
+	rm -rf out/*
 	mkdir tmp
 	mv build/CMakeLists.txt tmp
 	rm -rf build/*
