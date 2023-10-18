@@ -17,6 +17,7 @@ typedef enum {
     _AND,
     _OR,
     _NOT,
+    _NAME,
 } CONTEXT_TYPE ;
 
 typedef struct leaf {
@@ -127,6 +128,11 @@ agent* new_agent(char name[256], leaf *beliefs, leaf *goals, plan *plans, agent 
 }
 
 void eval(agent *agent) {
+    if (!agent) {
+        // unreachable
+        printf("Not valid agent.");
+
+    }
     auto jacamo_file = fopen("out/main.jcm", "w");
     fprintf(jacamo_file, "mas cc54a {");
     for(; agent; agent = agent->next) {

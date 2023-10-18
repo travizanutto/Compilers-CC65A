@@ -61,6 +61,7 @@ trigger: NAME SEMICOLON { strlcpy($$, yyval.s, 255); }
 context: NAME AND NAME SEMICOLON { $$ = new_context($1, $3, _AND); }
     | NAME OR NAME SEMICOLON { $$ = new_context($1, $3, _OR); }
     | NOT NAME SEMICOLON { $$ = new_context($2, NULL, _NOT); }
+    | NAME { $$ = new_context($1, NULL, _NAME); }
     ;
 
 actions: OPEN_CURLY_BRACKET simple_list CLOSE_CURLY_BRACKET { $$ = $2; }
