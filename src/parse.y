@@ -4,10 +4,10 @@
 
 %union {
     char s[256];
-    struct leaf *l;
-    struct context *e;
-    struct plan *p;
-    struct agent *a;
+    struct Leaf *l;
+    struct Context *e;
+    struct Plan *p;
+    struct Agent *a;
 }
 
 %token<s> NAME AGENT_NAME
