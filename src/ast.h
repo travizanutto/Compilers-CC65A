@@ -46,10 +46,17 @@ typedef struct agent {
     struct agent *next;
 } agent;
 
-/* function by: Jonathan Leffler
-https://stackoverflow.com/questions/16136437/clean-all-spaces-and-newlines-c-or-lex-bison */
+leaf* new_leaf(char name[256], leaf* next);
+context* new_context(char first[256], char second[256], CONTEXT_TYPE type);
+plan* new_plan(char plan_name[256], char trigger_name[256], context *contexts, leaf *actions, plan *next);
+agent* new_agent(char name[256], leaf *beliefs, leaf *goals, plan *plans, agent *next);
+void eval(agent *agent);
+void agent_to_asl(agent *agent);
+
 static void squish_whitespace(char *TAG)
 {
+    /* function by: Jonathan Leffler
+    https://stackoverflow.com/questions/16136437/clean-all-spaces-and-newlines-c-or-lex-bison */
     int sizeOfArray = strlen(TAG);
     int i, j;
     for (i = j = 0; i < sizeOfArray; i++)
@@ -122,8 +129,14 @@ agent* new_agent(char name[256], leaf *beliefs, leaf *goals, plan *plans, agent 
 void eval(agent *agent) {
     auto jacamo_file = fopen("out/main.jcm", "w");
     fprintf(jacamo_file, "mas cc54a {");
-
+    for(; agent; agent = agent->next) {
+        agent_to_asl(agent);
+    }
     fprintf(jacamo_file, "\n}");
+}
+
+void agent_to_asl(agent *agent) {
+
 }
 
 int main(int argc, char **argv) {
