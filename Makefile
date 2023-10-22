@@ -1,6 +1,7 @@
 .SILENT: clean
 
 all: src/lex.l src/parse.y
+	@mkdir -p jason
 	@cd build/ ; cmake . ; make -s
 	@cd ..
 
