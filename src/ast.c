@@ -203,7 +203,6 @@ void free_agents(Agent *agent)
 
 int main(int argc, char **argv)
 {
-    /*
     if (argc < 2)
     {
         printf("Usage ./cc54a <FILENAME>");
@@ -213,9 +212,7 @@ int main(int argc, char **argv)
     if (!yyin) {
         printf("Bad nag file");
         exit(EXIT_FAILURE);
-    } */
-    yyin = fopen("/home/cainan/Compilers-CC65A/src/bob.nag", "r");
-
+    }
     yyparse();
 }
 
