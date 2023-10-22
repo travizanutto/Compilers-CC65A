@@ -3,7 +3,7 @@
 %}
 
 %union {
-    char s[256];
+    char s[33];
     struct Leaf *l;
     struct Context *e;
     struct Plan *p;
@@ -42,7 +42,7 @@ plan_set: { $$ = NULL; }
     | plan_name OPEN_PARENTHESIS trigger context actions CLOSE_PARENTHESIS SEMICOLON plan_set { $$ = new_plan($1, $3, $4, $5, $8); }
     ;
 
-trigger: NAME SEMICOLON { strlcpy($$, yyval.s, NAME_SIZE_NULL); }
+trigger: NAME SEMICOLON { strncpy($$, yyval.s, NAME_SIZE); }
     ;
 
 context: NAME AND NAME SEMICOLON { $$ = new_context($1, $3, _AND); }
@@ -58,12 +58,12 @@ simple_list: { $$ = NULL; }
     | list_element_name SEMICOLON simple_list { $$ = new_leaf(yyval.s, $3); }
     ;
 
-plan_name: NAME { strlcpy($$, yyval.s, NAME_SIZE_NULL); }
+plan_name: NAME { strncpy($$, yyval.s, NAME_SIZE); }
     ;
     
-agent_name: AGENT_NAME { strlcpy($$, yyval.s, NAME_SIZE_NULL); }
+agent_name: AGENT_NAME { strncpy($$, yyval.s, NAME_SIZE); }
     ;
 
-list_element_name: NAME { strlcpy($$, yyval.s, NAME_SIZE_NULL); }
+list_element_name: NAME { strncpy($$, yyval.s, NAME_SIZE); }
     ;
 %%
