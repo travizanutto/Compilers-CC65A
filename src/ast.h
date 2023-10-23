@@ -1,3 +1,6 @@
+#ifndef AST_CC65A_H
+#define AST_CC65A_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -62,3 +65,5 @@ void free_ast(Agent *agent);
 void free_list(Leaf *list);
 void free_plans(Plan *plans);
 void free_agents(Agent *agent);
+
+#endif
