@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
 #include <string.h>
 
 // bison and flex related declarations and definitions
@@ -11,7 +10,6 @@ int yylex();
 int yyparse();
 
 #define NAME_SIZE 33
-#define NAME_SIZE_NULL 32
 
 typedef enum
 {

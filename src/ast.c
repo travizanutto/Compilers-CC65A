@@ -8,7 +8,7 @@ Leaf *new_leaf(char name[], Leaf *next)
         printf("Couldn't allocate leaf %s at %i.\n", name, yylineno);
         exit(EXIT_FAILURE);
     }
-    strlcpy(tmp->leaf_name, name, NAME_SIZE_NULL);
+    strncpy(tmp->leaf_name, name, NAME_SIZE);
     tmp->next = next;
     return tmp;
 }
@@ -21,10 +21,10 @@ Context *new_context(char first[], char second[], CONTEXT_TYPE type)
         printf("Couldn't allocate context at %i.\n", yylineno);
         exit(EXIT_FAILURE);
     }
-    strlcpy(tmp->first, first, NAME_SIZE_NULL);
+    strncpy(tmp->first, first, NAME_SIZE);
     if (second)
     {
-        strlcpy(tmp->second, second, NAME_SIZE_NULL);
+        strncpy(tmp->second, second, NAME_SIZE);
     }
     tmp->type = type;
     return tmp;
@@ -38,8 +38,8 @@ Plan *new_plan(char plan_name[], char trigger_name[], Context *context, Leaf *ac
         printf("Couldn't allocate plan %s at %i.\n", plan_name, yylineno);
         exit(EXIT_FAILURE);
     }
-    strlcpy(tmp->plan_name, plan_name, NAME_SIZE_NULL);
-    strlcpy(tmp->trigger_name, trigger_name, NAME_SIZE_NULL);
+    strncpy(tmp->plan_name, plan_name, NAME_SIZE);
+    strncpy(tmp->trigger_name, trigger_name, NAME_SIZE);
     tmp->context = context;
     tmp->actions = actions;
     tmp->next = next;
@@ -54,7 +54,7 @@ Agent *new_agent(char name[], Leaf *beliefs, Leaf *goals, Plan *plans, Agent *ne
         printf("Couldn't allocate agent %s at %i.\n", name, yylineno);
         exit(EXIT_FAILURE);
     }
-    strlcpy(tmp->agent_name, name, NAME_SIZE_NULL);
+    strncpy(tmp->agent_name, name, NAME_SIZE);
     tmp->beliefs = beliefs;
     tmp->goals = goals;
     tmp->plans = plans;
@@ -76,7 +76,7 @@ void eval(Agent *agent)
         printf("Could not open mas2j file");
         exit(EXIT_FAILURE);
     }
-    fprintf(jason_file, "MAS cc54a {");
+    fprintf(jason_file, "MAS cc64a {");
     fprintf(jason_file, "\n\tagents: ");
     for (; agent; agent = agent->next)
     {
@@ -205,7 +205,7 @@ int main(int argc, char **argv)
 {
     if (argc < 2)
     {
-        printf("Usage ./cc54a <FILENAME>");
+        printf("Usage ./cc64a <FILENAME>");
         exit(EXIT_FAILURE);
     }
     yyin = fopen(argv[1], "r");
