@@ -8,7 +8,7 @@ Leaf *new_leaf(char name[], Leaf *next)
         printf("Couldn't allocate leaf %s at %i.\n", name, yylineno);
         exit(EXIT_FAILURE);
     }
-    strlcpy(tmp->leaf_name, name, NAME_SIZE);
+    strncpy(tmp->leaf_name, name, NAME_SIZE);
     tmp->next = next;
     return tmp;
 }
