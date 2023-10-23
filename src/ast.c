@@ -71,7 +71,7 @@ void eval(Agent *agent)
         printf("Not valid agent.");
         exit(EXIT_FAILURE);
     }
-    FILE *jason_file = fopen("../jason/main.mas2j", "w");
+    FILE *jason_file = fopen("./jason/main.mas2j", "w");
     if (!jason_file)
     {
         printf("Could not open mas2j file");
@@ -94,7 +94,7 @@ void eval(Agent *agent)
 void agent_to_asl(Agent *agent)
 {
     char buffer[64];
-    char jason_path[] = "../jason/";
+    char jason_path[] = "./jason/";
     int string_len = strlen(jason_path) + NAME_SIZE + strlen(".asl");
     snprintf(buffer, string_len, "%s%s.asl", jason_path, agent->agent_name);
     FILE *asl_file = fopen(buffer, "w");
