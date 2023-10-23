@@ -23,7 +23,7 @@
 %start program
 
 %%
-program: agent_list { eval($1); free_ast($1); }
+program: agent_list { eval($1); }
 
 agent_list: { $$ = NULL; }
     | agent_name beliefs goals plans PERCENT agent_list { $$ = new_agent($1, $2, $3, $4, $6); }
@@ -42,7 +42,7 @@ plan_set: { $$ = NULL; }
     | plan_name OPEN_PARENTHESIS trigger context actions CLOSE_PARENTHESIS SEMICOLON plan_set { $$ = new_plan($1, $3, $4, $5, $8); }
     ;
 
-trigger: NAME SEMICOLON { strncpy($$, yyval.s, NAME_SIZE); }
+trigger: NAME SEMICOLON
     ;
 
 context: NAME AND NAME SEMICOLON { $$ = new_context($1, $3, _AND); }
@@ -58,12 +58,12 @@ simple_list: { $$ = NULL; }
     | list_element_name SEMICOLON simple_list { $$ = new_leaf(yyval.s, $3); }
     ;
 
-plan_name: NAME { strncpy($$, yyval.s, NAME_SIZE); }
+plan_name: NAME
     ;
     
-agent_name: AGENT_NAME { strncpy($$, yyval.s, NAME_SIZE); }
+agent_name: AGENT_NAME
     ;
 
-list_element_name: NAME { strncpy($$, yyval.s, NAME_SIZE); }
+list_element_name: NAME
     ;
 %%

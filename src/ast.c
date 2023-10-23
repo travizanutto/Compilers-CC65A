@@ -64,6 +64,7 @@ Agent *new_agent(char name[], Leaf *beliefs, Leaf *goals, Plan *plans, Agent *ne
 
 void eval(Agent *agent)
 {
+    fclose(yyin);
     if (!agent)
     {
         // unreachable
@@ -78,21 +79,24 @@ void eval(Agent *agent)
     }
     fprintf(jason_file, "MAS cc64a {");
     fprintf(jason_file, "\n\tagents: ");
+    Agent *agent_tmp = agent;
     for (; agent; agent = agent->next)
     {
         fprintf(jason_file, "%s; ", agent->agent_name);
         agent_to_asl(agent);
         free_ast(agent);
     }
+    free_agents(agent_tmp);
     fprintf(jason_file, "\n}");
     fclose(jason_file);
-    fclose(yyin);
 }
 
 void agent_to_asl(Agent *agent)
 {
-    char buffer[267];
-    snprintf(buffer, 267, "../jason/%s.asl", agent->agent_name);
+    char buffer[64];
+    char jason_path[] = "../jason/";
+    int string_len = strlen(jason_path) + NAME_SIZE + strlen(".asl");
+    snprintf(buffer, string_len, "%s%s.asl", jason_path, agent->agent_name);
     FILE *asl_file = fopen(buffer, "w");
     if (!asl_file)
     {
@@ -135,7 +139,8 @@ void print_context(FILE *asl_file, Context *context)
         fprintf(asl_file, "%s\n", context->first);
         break;
     default:
-        exit(EXIT_FAILURE); // unreachable
+        printf("bad context type"); // unreachable
+        exit(EXIT_FAILURE);
         break;
     }
 }
@@ -150,55 +155,46 @@ void print_actions(FILE *asl_file, Leaf *actions)
     fprintf(asl_file, "\t%s.\n\n", actions->leaf_name);
 }
 
-void free_ast(Agent *agent)
+void *free_ast(Agent *agent)
 {
     if (!agent)
-        return;
-    free_list(agent->beliefs);
-    agent->beliefs = NULL;
-    free_list(agent->goals);
-    agent->goals = NULL;
-    free_plans(agent->plans);
-    agent->plans = NULL;
+        return NULL;
+    agent->beliefs = free_list(agent->beliefs);
+    agent->goals = free_list(agent->goals);
+    agent->plans = free_plans(agent->plans);
+    return NULL;
 }
 
-void free_list(Leaf *list)
+void *free_list(Leaf *list)
 {
     if (!list)
-        return;
+        return NULL;
     if (list->next)
-    {
-        free_list(list->next);
-        list->next = NULL;
-    }
+        list->next = free_list(list->next);
     free(list);
-    list = NULL;
+    return NULL;
 }
 
-void free_plans(Plan *plans)
+void *free_plans(Plan *plans)
 {
     if (!plans)
-        return;
+        return NULL;
     if (plans->next)
-    {
-        free_plans(plans->next);
-        plans->next = NULL;
-    }
-    free_list(plans->actions);
-    plans->actions = NULL;
+        plans->next = free_plans(plans->next);
+    plans->actions = free_list(plans->actions);
     free(plans->context);
-    plans->context = NULL;
     free(plans);
-    plans = NULL;
+    return NULL;
 }
 
-void free_agents(Agent *agent)
+void *free_agents(Agent *agent)
 {
     if (!agent)
-        return;
+        return NULL;
     if (agent->next)
-        free_agents(agent->next);
+        agent->next = (agent->next);
     free(agent);
+    return NULL;
 }
 
 int main(int argc, char **argv)
@@ -209,7 +205,8 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
     yyin = fopen(argv[1], "r");
-    if (!yyin) {
+    if (!yyin)
+    {
         printf("Bad nag file");
         exit(EXIT_FAILURE);
     }

@@ -13,8 +13,10 @@ set(LEXER_OUT "${PARSER_DIR}/lex.c")
 set(PARSER_OUT "${PARSER_DIR}/parse.tab.c")
 
 flex_target(LEXER "${SRC_DIR}/lex.l" "${LEXER_OUT}" DEFINES_FILE "${PARSER_DIR}/lex.h")
-bison_target(PARSER "${SRC_DIR}/parse.y" "${PARSER_OUT}" DEFINES_FILE "${PARSER_DIR}/parse.tab.h" COMPILE_FLAGS -Wcounterexamples)
+bison_target(PARSER "${SRC_DIR}/parse.y" "${PARSER_OUT}" DEFINES_FILE "${PARSER_DIR}/parse.tab.h")
 add_flex_bison_dependency(LEXER PARSER)
 
+#add_compile_options(-O2 -fsanitize=address -fno-omit-frame-pointer)
+#add_link_options(-fsanitize=address)
+
 add_executable(cc64a "${LEXER_OUT}" "${PARSER_OUT}" "${SRC_DIR}/ast.c")
-target_include_directories(cc64a PRIVATE "${PARSER_DIR}")

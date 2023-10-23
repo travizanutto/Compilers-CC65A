@@ -2,15 +2,17 @@
 #define AST_CC65A_H
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 
-// bison and flex related declarations and definitions
-extern int yylineno;
-extern FILE *yyin;
+// bison/yacc and flex/lex related declarations
 int yyerror(const char *s, ...);
 int yylex();
 int yyparse();
+extern int yylineno;
+extern FILE *yyin;
+extern int yylineno;
+extern FILE *yyin;
 
 #define NAME_SIZE 33
 
@@ -40,16 +42,16 @@ typedef struct Plan
     char plan_name[NAME_SIZE];
     char trigger_name[NAME_SIZE];
     Context *context;
-    struct Leaf *actions;
+    Leaf *actions;
     struct Plan *next;
 } Plan;
 
 typedef struct Agent
 {
     char agent_name[NAME_SIZE];
-    struct Leaf *beliefs;
-    struct Leaf *goals;
-    struct Plan *plans;
+    Leaf *beliefs;
+    Leaf *goals;
+    Plan *plans;
     struct Agent *next;
 } Agent;
 
@@ -61,9 +63,9 @@ void eval(Agent *agents);
 void agent_to_asl(Agent *agents);
 void print_context(FILE *asl_file, Context *context);
 void print_actions(FILE *asl_file, Leaf *actions);
-void free_ast(Agent *agent);
-void free_list(Leaf *list);
-void free_plans(Plan *plans);
-void free_agents(Agent *agent);
+void* free_ast(Agent *agent);
+void* free_list(Leaf *list);
+void* free_plans(Plan *plans);
+void* free_agents(Agent *agent);
 
 #endif
