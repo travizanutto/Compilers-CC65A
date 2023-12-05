@@ -1,0 +1,10 @@
+nag_jacamo/build/*
+!nag_jacamo/build/CMakeLists.txt
+nag_jacamo/bin
+nag_jacamo/.vscode
+nag_jacamo/jason/*
+
+simple_prog_lang/build/*
+!simple_prog_lang/build/CMakeLists.txt
+simple_prog_lang/bin
+simple_prog_lang/.vscode

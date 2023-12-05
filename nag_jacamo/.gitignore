@@ -1,5 +1,0 @@
-build
-!build/CMakeLists.txt
-bin
-.vscode
-jason/*
