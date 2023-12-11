@@ -1,12 +1,9 @@
-#ifndef AST_CC65A_H
-#define AST_CC65A_H
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
 // bison/yacc and flex/lex related declarations
-int yyerror(const char *s, ...);
+void yyerror(const char *s, ...);
 int yylex();
 int yyparse();
 extern int yylineno;
@@ -14,58 +11,94 @@ extern FILE *yyin;
 extern int yylineno;
 extern FILE *yyin;
 
-#define NAME_SIZE 33
+struct symbol { 
+    char *name;
+    double value;
+    struct ast *func;
+    struct symlist *syms;
+};
 
-typedef enum
-{
-    _AND,
-    _OR,
-    _NOT,
-    _NAME,
-} CONTEXT_TYPE;
+#define HASH_SIZE 9997
 
-typedef struct Leaf
-{
-    char leaf_name[NAME_SIZE];
-    struct Leaf *next;
-} Leaf;
+struct symbol *lookup(char*);
 
-typedef struct Context
-{
-    char first[NAME_SIZE];
-    char second[NAME_SIZE];
-    CONTEXT_TYPE type;
-} Context;
+struct symlist {
+    struct symbol *sym;
+    struct symlist *next;
+};
 
-typedef struct Plan
-{
-    char plan_name[NAME_SIZE];
-    char trigger_name[NAME_SIZE];
-    Context *context;
-    Leaf *actions;
-    struct Plan *next;
-} Plan;
+struct symlist *newsymlist(struct symbol *sym, struct symlist *next);
+void symlistfree(struct symlist *sl);
 
-typedef struct Agent
-{
-    char agent_name[NAME_SIZE];
-    Leaf *beliefs;
-    Leaf *goals;
-    Plan *plans;
-    struct Agent *next;
-} Agent;
+enum bifs {
+    B_sqrt = 1,
+    B_exp,
+    B_log,
+    B_print,
+};
 
-Leaf *new_leaf(char name[], Leaf *next);
-Context *new_context(char first[], char second[], CONTEXT_TYPE type);
-Plan *new_plan(char plan_name[], char trigger_name[], Context *context, Leaf *actions, Plan *next);
-Agent *new_agent(char name[], Leaf *beliefs, Leaf *goals, Plan *plans, Agent *next);
-void eval(Agent *agents);
-void agent_to_asl(Agent *agents);
-void print_context(FILE *asl_file, Context *context);
-void print_actions(FILE *asl_file, Leaf *actions);
-void* free_ast(Agent *agent);
-void* free_list(Leaf *list);
-void* free_plans(Plan *plans);
-void* free_agents(Agent *agent);
+struct ast {
+    int nodetype;
+    struct ast *l;
+    struct ast *r;
+};
 
-#endif
+struct fncall {
+    int nodetype;
+    struct ast *l;
+    enum bifs functype;
+};
+
+struct ufncall {
+    int nodetype;
+    struct ast *l;
+    struct symbol *s;
+};
+
+struct flow {
+    int nodetype;
+    struct ast *cond;
+    struct ast *tl;
+    struct ast *el;
+};
+
+struct fornode {
+    int nodetype; 
+    struct ast *init;
+    struct ast *cond;
+    struct ast *incr;
+    struct ast *body;
+};
+
+struct numval {
+    int nodetype;
+    double number;
+};
+
+struct symref {
+    int nodetype;
+    struct symbol *s;
+};
+
+struct symasgn {
+    int nodetype;
+    struct symbol *s;
+    struct ast *v;
+};
+
+struct ast *newast(int nodetype, struct ast *l, struct ast *r);
+struct ast *newcmp(int cmptype, struct ast *l, struct ast *r);
+struct ast *newfunc(int functype, struct ast *l);
+struct ast *newcall(struct symbol *s, struct ast *l);
+struct ast *newref(struct symbol *s);
+struct ast *newnum(double d);
+struct ast *newflow(int nodetype, struct ast *cond, struct ast *tl, struct ast *el);
+struct ast *newasgn(struct symbol *s, struct ast *v);
+struct ast *newfor(struct ast *init, struct ast *cond, struct ast *incr, struct ast *body);
+
+double eval_forloop(struct fornode *f);
+
+void dodef(struct symbol *name, struct symlist *syms, struct ast *stmts);
+void treefree(struct ast *);
+double eval(struct ast *);
+
