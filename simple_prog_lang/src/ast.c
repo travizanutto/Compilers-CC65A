@@ -76,8 +76,14 @@ struct ast *newfunc(int functype, struct ast *l)
         exit(0);
     }
     a->nodetype = 'F';
-    a->l = l->l;
-    a->r = l->r;
+    if (l->nodetype == 'L') {
+        a->l = l->l;
+        a->r = l->r;
+    }
+    else {
+        a->l = l;
+        a->r = NULL;
+    }
     a->functype = functype;
     return (struct ast *)a;
 }
