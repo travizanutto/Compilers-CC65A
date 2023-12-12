@@ -1,7 +1,7 @@
 %option noyywrap nodefault yylineno
 %{
 #include "parse.tab.h"
-#include "/home/cainan/Compilers-CC65A/simple_prog_lang/src/ast.h"
+#include "../src/ast.h"
 %}
 
 EXP ([Ee][-+]?[0-9]+)
@@ -18,7 +18,7 @@ EXP ([Ee][-+]?[0-9]+)
 ")" |
 "^"     { return yytext[0]; }
 
-"#"     { while(input() != '\n'); printf("> "); }
+"#"     { while(input() != '\n'); return EOL; }
 
 ">"     { yylval.fn = 1; return CMP; }
 "<"     { yylval.fn = 2; return CMP; }

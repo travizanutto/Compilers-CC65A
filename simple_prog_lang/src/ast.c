@@ -195,7 +195,7 @@ void treefree(struct ast *a)
             if (((struct fornode *)a)->body) treefree(((struct fornode *)a)->body);
             break;
         default:
-            printf("[ERROR] Free bad node %c\n> ", a->nodetype);
+            printf("[ERROR] Free bad node %c\n", a->nodetype);
     }
     free(a);
 }
@@ -275,9 +275,10 @@ double eval(struct ast *a)
             break;
 
         case 'F': v = callbuiltin((struct fncall *)a);
-            if (((struct fncall *)a)->functype == B_exit) 
+            if (((struct fncall *)a)->functype == B_exit) {
                 treefree(a);
                 exit(v);
+            }
             break;
         case 'C': v = calluser((struct ufncall *)a); break; 
         case 'L': eval(a->l); v = eval(a->r); break;
@@ -413,7 +414,30 @@ void yyerror(const char *s, ...)
     fprintf(stderr, "\n");
 }
 
-int main() {
-    printf("> ");
+
+
+int main(int argc, char **argv) {
+    if (argc > 2) {
+        printf("[ERROR] Too many arguments\n");
+        exit(1);
+    }
+    if (argc == 2) {
+        yyin = fopen(argv[1], "a+r");
+        if (!yyin) {
+            printf("[ERROR] Cannot open file %s\n", argv[1]);
+            exit(1);
+        }
+
+        fseek(yyin, -1, SEEK_END);
+        char last_char = fgetc(yyin);
+        if (last_char != '\n') {
+            fputc('\n', yyin);
+        }
+
+        fseek(yyin, 0, SEEK_SET);
+    }
+    else {
+        yyin = stdin;
+    }
     yyparse();
 }

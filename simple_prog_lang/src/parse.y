@@ -1,5 +1,5 @@
 %{
-#include "/home/cainan/Compilers-CC65A/simple_prog_lang/src/ast.h"    
+#include "../src/ast.h"    
 %}
 
 %union {
@@ -75,12 +75,12 @@ warnings: FUNC '(' ')'               { printf("[WARNING] Function takes argument
 
 calclist:
     | calclist stmt EOL {
-        printf("= %4.4g\n> ", eval($2));
+        eval($2);
         treefree($2);
       }
     | calclist LET NAME '(' symlist ')' '=' list EOL {
         dodef($3, $5, $8);
-        printf("Defined %s\n> ", $3->name);
+        printf("Defined %s\n", $3->name);
       }
     | calclist error EOL { yyerrok; printf("> "); }
     | calclist warnings EOL { printf("> "); }
