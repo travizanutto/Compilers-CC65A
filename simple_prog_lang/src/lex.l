@@ -17,6 +17,8 @@ EXP ([Ee][-+]?[0-9]+)
 "(" |
 ")"     { return yytext[0]; }
 
+"#"     { while(input() != '\n'); printf("> "); }
+
 ">"     { yylval.fn = 1; return CMP; }
 "<"     { yylval.fn = 2; return CMP; }
 "!="    { yylval.fn = 3; return CMP; }
@@ -41,7 +43,7 @@ EXP ([Ee][-+]?[0-9]+)
 "print" { yylval.fn = B_print; return FUNC; }
 
 "pow"   { yylval.fn = B_pow; return FUNC; }
-"mod"  { yylval.fn = B_mod; return FUNC; }
+"mod"   { yylval.fn = B_mod; return FUNC; }
 "exit"  { yylval.fn = B_exit; return FUNC; }
 
 [a-zA-Z][a-zA-Z0-9]*    { yylval.s = lookup(yytext); return NAME; }
