@@ -218,23 +218,6 @@ void symlistfree(struct symlist *sl)
 static double callbuiltin(struct fncall *);
 static double calluser(struct ufncall *);
 
-double eval_forloop(struct fornode *f) {
-    double v = 0;
-
-    if(f->init) 
-        eval(f->init);
-
-    for( ; f->cond == NULL || eval(f->cond) != 0; ) {
-        if(f->body) 
-            v = eval(f->body);
-
-        if(f->incr) 
-            eval(f->incr); 
-    }
-
-    return v;
-}
-
 double eval(struct ast *a) 
 {
     double v;
@@ -259,25 +242,27 @@ double eval(struct ast *a)
         case '5': v = (eval(a->l) >= eval(a->r)) ? 1 : 0; break;
         case '6': v = (eval(a->l) <= eval(a->r)) ? 1 : 0; break;
         case 'I':
-            if (eval(((struct flow *)a)->cond) != 0) {
-                if (((struct flow *)a)->tl) {
-                    v = eval(((struct flow *)a)->tl);
+            struct flow *i = (struct flow*) a;
+            if (eval(i->cond) != 0) {
+                if (i->tl) {
+                    v = eval(i->tl);
                 } else {
                     v = 0.0;
                 }
             } else {
-                if (((struct flow *)a)->el) {
-                    v = eval(((struct flow *)a)->el);
+                if (i->el) {
+                    v = eval(i->el);
                 } else {
                     v = 0.0;
                 }
             }
             break;
         case 'W':
+            struct flow *w = (struct flow*)a;
             v = 0.0;
-            if (((struct flow *)a)->tl) {
-                while(eval(((struct flow *)a)->cond) != 0)
-                    v = eval(((struct flow *)a)->tl);
+            if (w->tl) {
+                while(eval(w->cond) != 0)
+                    v = eval(w->tl);
             }
             break;
 
@@ -286,8 +271,20 @@ double eval(struct ast *a)
         case 'L': eval(a->l); v = eval(a->r); break;
         case 'A': v = eval(a->l) && eval(a->r); break;
         case 'O': v = eval(a->l) || eval(a->r); break;
-        case 'J': v = eval_forloop((struct fornode *)a); break;
+        case 'J':  
+            struct fornode *f = (struct fornode*)a;
+            v = 0.0;
+            if(f->init) 
+                eval(f->init);
 
+            for(; f->cond == NULL || eval(f->cond) != 0;) {
+                if(f->body) 
+                    v = eval(f->body);
+
+                if(f->incr) 
+                    eval(f->incr); 
+            }
+            break;
         default: printf("[ERROR] Internal error: bad node %c\n", a->nodetype);
     }
     return v;
@@ -308,6 +305,8 @@ static double callbuiltin(struct fncall *f)
         case B_print:
             printf("= %4.4g\n", v);
             return v;
+        case B_exit:
+            exit(v);
         default:
             yyerror("[ERROR] Unknown built-in function %d", functype);
             return 0.0;
@@ -333,7 +332,7 @@ static double calluser(struct ufncall *f)
     int i;
 
     if (!fn->func) {
-        yyerror("[ERROR] Call to undefined function", fn->name);
+        yyerror("Call to undefined function", fn->name);
         return 0;
     }
 

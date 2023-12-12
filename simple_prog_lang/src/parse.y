@@ -1,12 +1,12 @@
 %{
-#include "/home/cainan/Compilers-CC65A/simple_prog_lang/src/ast.h"    
+#include "../src/ast.h"    
 %}
 
 %union {
     struct ast *a;
     double d;
     struct symbol *s;
-    struct symblist *sl;
+    struct symlist *sl;
     int fn;
 }
 
@@ -68,6 +68,9 @@ symlist: NAME                        { $$ = newsymlist($1, NULL); }
     | NAME ',' symlist               { $$ = newsymlist($1, $3); }
 ;
 
+warnings: FUNC '(' ')'               { printf("[WARNING] Function takes arguments\n"); }
+;
+
 calclist:
     | calclist stmt EOL {
         printf("= %4.4g\n> ", eval($2));
@@ -78,5 +81,6 @@ calclist:
         printf("Defined %s\n> ", $3->name);
       }
     | calclist error EOL { yyerrok; printf("> "); }
+    | calclist warnings EOL { printf("> "); }
 ;
 %%

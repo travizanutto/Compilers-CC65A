@@ -35,6 +35,7 @@ enum bifs {
     B_exp,
     B_log,
     B_print,
+    B_exit
 };
 
 struct ast {
@@ -95,8 +96,6 @@ struct ast *newnum(double d);
 struct ast *newflow(int nodetype, struct ast *cond, struct ast *tl, struct ast *el);
 struct ast *newasgn(struct symbol *s, struct ast *v);
 struct ast *newfor(struct ast *init, struct ast *cond, struct ast *incr, struct ast *body);
-
-double eval_forloop(struct fornode *f);
 
 void dodef(struct symbol *name, struct symlist *syms, struct ast *stmts);
 void treefree(struct ast *);
