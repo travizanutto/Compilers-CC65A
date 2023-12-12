@@ -76,7 +76,8 @@ struct ast *newfunc(int functype, struct ast *l)
         exit(0);
     }
     a->nodetype = 'F';
-    a->l = l;
+    a->l = l->l;
+    a->r = l->r;
     a->functype = functype;
     return (struct ast *)a;
 }
@@ -294,6 +295,7 @@ static double callbuiltin(struct fncall *f)
 {
     enum bifs functype = f->functype;
     double v = eval(f->l);
+    double r = f->r ? eval(f->r) : 1;
 
     switch(functype) {
         case B_sqrt:
@@ -305,6 +307,10 @@ static double callbuiltin(struct fncall *f)
         case B_print:
             printf("= %4.4g\n", v);
             return v;
+        case B_pow:
+            return pow(v, r);
+        case B_mod:
+            return ((int)v) % ((int)r);
         case B_exit:
             exit(v);
         default:

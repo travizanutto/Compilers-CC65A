@@ -1,7 +1,7 @@
 %option noyywrap nodefault yylineno
 %{
 #include "parse.tab.h"
-#include "../src/ast.h"
+#include "/home/cainan/Compilers-CC65A/simple_prog_lang/src/ast.h"
 %}
 
 EXP ([Ee][-+]?[0-9]+)
@@ -40,7 +40,9 @@ EXP ([Ee][-+]?[0-9]+)
 "log"   { yylval.fn = B_log; return FUNC; }
 "print" { yylval.fn = B_print; return FUNC; }
 
-"exit" { yylval.fn = B_exit; return FUNC; }
+"pow"   { yylval.fn = B_pow; return FUNC; }
+"mod"  { yylval.fn = B_mod; return FUNC; }
+"exit"  { yylval.fn = B_exit; return FUNC; }
 
 [a-zA-Z][a-zA-Z0-9]*    { yylval.s = lookup(yytext); return NAME; }
 

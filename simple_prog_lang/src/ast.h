@@ -35,6 +35,8 @@ enum bifs {
     B_exp,
     B_log,
     B_print,
+    B_pow,
+    B_mod,
     B_exit
 };
 
@@ -47,6 +49,7 @@ struct ast {
 struct fncall {
     int nodetype;
     struct ast *l;
+    struct ast *r;
     enum bifs functype;
 };
 

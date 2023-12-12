@@ -1,5 +1,5 @@
 %{
-#include "../src/ast.h"    
+#include "/home/cainan/Compilers-CC65A/simple_prog_lang/src/ast.h"    
 %}
 
 %union {
