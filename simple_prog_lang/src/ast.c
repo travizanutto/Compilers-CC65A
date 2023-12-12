@@ -174,9 +174,9 @@ void treefree(struct ast *a)
     switch(a->nodetype) {
         case '+': case '-': case '*': case '/': case '^':
         case '1': case '2': case '3': case '4': case '5': case '6': 
-        case 'L':
-            treefree(a->r);
-        case 'F': case 'C':
+        case 'L': case 'F': case 'C':
+            if (a->r)
+                treefree(a->r);
             treefree(a->l);
         case 'K': case 'N':
             break;
