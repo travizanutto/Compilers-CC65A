@@ -22,6 +22,7 @@
 %left AND OR
 %left  '+' '-'
 %left  '*' '/'
+%right '^' 
 
 %type<a> exp stmt list explist
 %type<sl> symlist
@@ -49,7 +50,8 @@ exp:  exp CMP exp                    { $$ = newcmp($2, $1, $3); }
     | exp '+' exp                    { $$ = newast('+', $1, $3); }  
     | exp '-' exp                    { $$ = newast('-', $1, $3); }  
     | exp '*' exp                    { $$ = newast('*', $1, $3); }  
-    | exp '/' exp                    { $$ = newast('/', $1, $3); }  
+    | exp '/' exp                    { $$ = newast('/', $1, $3); }
+    | exp '^' exp                    { $$ = newast('^', $1, $3); }  
     | '(' exp ')'                    { $$ = $2; }   
     | NUMBER                         { $$ = newnum($1); }
     | NAME                           { $$ = newref($1); }

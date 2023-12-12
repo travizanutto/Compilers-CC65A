@@ -15,14 +15,15 @@ EXP ([Ee][-+]?[0-9]+)
 "," |
 ";" |
 "(" |
-")"     { return yytext[0]; }
+")" |
+"^"     { return yytext[0]; }
 
 "#"     { while(input() != '\n'); printf("> "); }
 
 ">"     { yylval.fn = 1; return CMP; }
 "<"     { yylval.fn = 2; return CMP; }
 "!="    { yylval.fn = 3; return CMP; }
-"=="     { yylval.fn = 4; return CMP; }
+"=="    { yylval.fn = 4; return CMP; }
 ">="    { yylval.fn = 5; return CMP; }
 "<="    { yylval.fn = 6; return CMP; }
 

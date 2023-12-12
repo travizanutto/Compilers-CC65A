@@ -172,7 +172,7 @@ struct ast *newfor(struct ast *init, struct ast *cond, struct ast *incr, struct 
 void treefree(struct ast *a) 
 {
     switch(a->nodetype) {
-        case '+': case '-': case '*': case '/':
+        case '+': case '-': case '*': case '/': case '^':
         case '1': case '2': case '3': case '4': case '5': case '6': 
         case 'L':
             treefree(a->r);
@@ -242,6 +242,7 @@ double eval(struct ast *a)
         case '-': v = eval(a->l) - eval(a->r); break;
         case '*': v = eval(a->l) * eval(a->r); break;
         case '/': v = eval(a->l) / eval(a->r); break;
+        case '^': v = pow(eval(a->l), eval(a->r)); break;
         case '1': v = (eval(a->l) > eval(a->r)) ? 1 : 0; break;
         case '2': v = (eval(a->l) < eval(a->r)) ? 1 : 0; break;
         case '3': v = (eval(a->l) != eval(a->r)) ? 1 : 0; break;
@@ -273,7 +274,11 @@ double eval(struct ast *a)
             }
             break;
 
-        case 'F': v = callbuiltin((struct fncall *)a); break;
+        case 'F': v = callbuiltin((struct fncall *)a);
+            if (((struct fncall *)a)->functype == B_exit) 
+                treefree(a);
+                exit(v);
+            break;
         case 'C': v = calluser((struct ufncall *)a); break; 
         case 'L': eval(a->l); v = eval(a->r); break;
         case 'A': v = eval(a->l) && eval(a->r); break;
@@ -318,7 +323,7 @@ static double callbuiltin(struct fncall *f)
         case B_mod:
             return ((int)v) % ((int)r);
         case B_exit:
-            exit(v);
+            return v;
         default:
             yyerror("[ERROR] Unknown built-in function %d", functype);
             return 0.0;
