@@ -417,8 +417,8 @@ void yyerror(const char *s, ...)
 
 
 int main(int argc, char **argv) {
-    if (argc > 2) {
-        printf("[ERROR] Too many arguments\n");
+    if (argc < 2) {
+        printf("[ERROR] Too few arguments\n");
         exit(1);
     }
     if (argc == 2) {
@@ -436,8 +436,6 @@ int main(int argc, char **argv) {
 
         fseek(yyin, 0, SEEK_SET);
     }
-    else {
-        yyin = stdin;
-    }
+
     yyparse();
 }
